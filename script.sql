@@ -175,18 +175,16 @@ select * from mathang where mabp = 'BP001';
 -- 3 In ra TEN_MH, Ma_BP, MA_NGUOI_CUNG_CAP, TEN_NGUOI_CUNG_CAP của MH01.
 select * from cungcap;
 
-select m.masmh, m.tenmh, m.mabp, c.mancc, n.tenncc from mathang m join cungcap c 
-																		on m.masmh = c.masmh
-															      join nguoicungcap n
-																		on n.mancc = c.mancc
-													where m.masmh = 'MH01' ;
+select m.masmh, m.tenmh, m.mabp, c.mancc, n.tenncc 
+from mathang m join cungcap c on m.masmh = c.masmh
+			   join nguoicungcap n on n.mancc = c.mancc
+where m.masmh = 'MH01';
 
 -- 4
 select n.mancc, n.tenncc, count(c.masmh) as sl 
-										from nguoicungcap n 
-										join cungcap c on n.mancc = c.mancc
-										group by n.mancc, n.tenncc
-                                        order by sl desc, n.mancc desc;
+from nguoicungcap n join cungcap c on n.mancc = c.mancc
+group by n.mancc, n.tenncc
+order by sl desc, n.mancc desc;
                                         
 -- 5 .Đếm xem đơn hàng có mã DDH01có tổng bao nhiêu mặt hàng và tổng số lượng của tất cả mặt hàng là bao nhiêu cái.
 
@@ -220,13 +218,12 @@ select sum(c.soluong) from chitietdonhang c where c.masmh = 'MH01';
 -- 12 Liệt kê MA_NCC và Ten_NCC cung cấp nhiều cung cấp có tên là May khoan.
 select n.mancc, n.tenncc 
 from nguoicungcap n join cungcap c on n.mancc = c.mancc 
-						   join mathang m on c.masmh = m.masmh
+				    join mathang m on c.masmh = m.masmh
 where m.tenmh = 'May khoan';
 
 -- 13 Liệt kê Tên , địa chỉ của những khách hàng sở hữu đơn hàng có Sohieuddh là DDH07 hoặc DDH08 hoặc DDH02.
 select k.tenkh, k.diachikh 
-from khachhang k 
-	join donhang d on k.makh = d.makh
+from khachhang k join donhang d on k.makh = d.makh
 where d.sohieuddh in('DDH07', 'DDH08', 'DDH02' );
 
 -- 14 Liệt kê Tên , địa chỉ và  số lượng đơn của  khách hàng sở hữu nhiều đơn hàng nhất.
@@ -240,10 +237,3 @@ select m.tenmh, sum(c.soluong) as sl
 from mathang m join chitietdonhang c on m.masmh = c.masmh
 where m.masmh = 'MH03'
 group by m.tenmh
-
-																		
-                                                                            
-                                                                            
-   
-                              
-
