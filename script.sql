@@ -166,4 +166,84 @@ VALUES (null,5,10000,'DDH01','MH01'),
 INSERT INTO chitietdonhang
 VALUES(null,1,11000,'DDH04','MH03');
 
+-- 1
+select masmh, tenmh from mathang where tenmh = 'Thanh Long';
+
+-- 2
+select * from mathang where mabp = 'BP001';
+
+-- 3 In ra TEN_MH, Ma_BP, MA_NGUOI_CUNG_CAP, TEN_NGUOI_CUNG_CAP của MH01.
+select * from cungcap;
+
+select m.masmh, m.tenmh, m.mabp, c.mancc, n.tenncc from mathang m join cungcap c 
+																		on m.masmh = c.masmh
+															      join nguoicungcap n
+																		on n.mancc = c.mancc
+													where m.masmh = 'MH01' ;
+
+-- 4
+select n.mancc, n.tenncc, count(c.masmh) as sl 
+										from nguoicungcap n 
+										join cungcap c on n.mancc = c.mancc
+										group by n.mancc, n.tenncc
+                                        order by sl desc, n.mancc desc;
+                                        
+-- 5 .Đếm xem đơn hàng có mã DDH01có tổng bao nhiêu mặt hàng và tổng số lượng của tất cả mặt hàng là bao nhiêu cái.
+
+-- 6.In ra TEN_KHACH_HANG, SO_HIEU_DON_HANG, MA_MH , TEN_MH, SoLuong mà khách hàng có mã là KH02 đã mua.
+select kh.tenkh, d.sohieuddh, c.masmh, m.tenmh, c.soluong 
+from khachhang kh 
+	join donhang d on kh.makh = d.makh
+	join chitietdonhang c on d.sohieuddh = c.sohieuddh
+	join mathang m on c.masmh = m.masmh
+where kh.makh = 'KH002';
+                                                                            
+-- 7 in ra tất cả MA_KHACH_HANG , TEN_KHACH_HANG, SO_HIEU_DON_HANG,Ngay_Dat_Hang của những khách hàng có địa chỉ ở Ha Noi.                                                                     
+select k.makh, k.tenkh, d.sohieuddh, d.ngaydh
+from khachhang k join donhang d on k.makh = d.makh
+where k.diachikh = 'Ha Noi';																
+
+-- 8 Đếm xem khách hàng có mã KH02 có tổng cộng bao nhiêu đơn hàng.
+select count(*) as 'no donhang by KH002' from donhang d where d.makh = 'KH002';
+
+-- 9 .In ra MA_KHACH_HANG , TEN_KHACH_HANG và SO_HIEU_DON_HANG của những khách hàng mua vào tháng 12 năm 2023
+select k.makh, k.tenkh from khachhang k join donhang d on k.makh = d.makh 
+where month(d.ngaydh) = 12 AND year(d.ngaydh) = 2023  ;                                                         
+                                                                            
+-- 10 Liệt kê tổng tiền mà khách hàng có mã KH02 đã trả để mua mặt hàng có mã MH01
+select soluong * dongia from donhang d join chitietdonhang c on d.sohieuddh = c.sohieuddh
+where d.makh = 'KH002' AND c.masmh = 'MH01' ;
+
+-- 11 Tổng số lượng mà mặt hàng có mã MH01 được mua.
+select sum(c.soluong) from chitietdonhang c where c.masmh = 'MH01';
+
+-- 12 Liệt kê MA_NCC và Ten_NCC cung cấp nhiều cung cấp có tên là May khoan.
+select n.mancc, n.tenncc 
+from nguoicungcap n join cungcap c on n.mancc = c.mancc 
+						   join mathang m on c.masmh = m.masmh
+where m.tenmh = 'May khoan';
+
+-- 13 Liệt kê Tên , địa chỉ của những khách hàng sở hữu đơn hàng có Sohieuddh là DDH07 hoặc DDH08 hoặc DDH02.
+select k.tenkh, k.diachikh 
+from khachhang k 
+	join donhang d on k.makh = d.makh
+where d.sohieuddh in('DDH07', 'DDH08', 'DDH02' );
+
+-- 14 Liệt kê Tên , địa chỉ và  số lượng đơn của  khách hàng sở hữu nhiều đơn hàng nhất.
+select k.tenkh, k.diachikh, count(d.sohieuddh) 
+from khachhang k join donhang d on k.makh = d.makh                          
+group by k.tenkh, k.diachikh
+having count(d.sohieuddh) >= ALL(select count(*) from donhang group by makh);                                                                            
+                                                                            
+-- 15 Liệt kê TenMH và tổng tất cả số lượng mà khách hàng đã mua mặt hàng có mã MH03
+select m.tenmh, sum(c.soluong) as sl
+from mathang m join chitietdonhang c on m.masmh = c.masmh
+where m.masmh = 'MH03'
+group by m.tenmh
+
+																		
+                                                                            
+                                                                            
+   
+                              
 
